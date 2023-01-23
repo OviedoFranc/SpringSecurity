@@ -5,9 +5,11 @@ import com.login.TokenLogin.Security.Filter.JWTAuthorizationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,11 +35,14 @@ public class WebSecurityConfig {
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
             return http
+                    .csrf().disable() // TODO: HABILITAR PERO PARA LOS POST PASAR UN CORS TOKEN
                     .cors()
                     .and()
                     .authorizeHttpRequests()
-                    .requestMatchers("/user")
-                    .permitAll()// entramos a las reglas de las solicitudes
+                           .requestMatchers("/user","/user/**")
+                           .permitAll()
+                    .requestMatchers("/adminPanel").hasAnyRole("ADMIN")
+                    // entramos a las reglas de las solicitudes
                     .anyRequest()
                     .authenticated()  //cualquier solicitud autenticada
                     .and()
@@ -47,7 +52,7 @@ public class WebSecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // sin estado
                     .and()
 					.addFilter(jwtAuthenticationFilter)
-					.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+					.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
         }
 

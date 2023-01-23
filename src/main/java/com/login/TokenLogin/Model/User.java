@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.id.factory.internal.AutoGenerationTypeStrategy;
 
 @Entity @Getter @Setter @NoArgsConstructor
 @Table(name = "user")

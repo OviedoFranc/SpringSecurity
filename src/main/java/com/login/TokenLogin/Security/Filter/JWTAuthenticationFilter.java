@@ -2,8 +2,9 @@ package com.login.TokenLogin.Security.Filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.login.TokenLogin.Model.User;
-import com.login.TokenLogin.Security.AuthCredentials;
+import com.login.TokenLogin.Model.DTO.AuthCredentials;
 import com.login.TokenLogin.Security.TokenUtils;
+import com.login.TokenLogin.Security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,9 +49,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        User userDetails = (User) authResult.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
         String token = TokenUtils.createToken(userDetails.getNombre(),
-                                              userDetails.getEmail());
+                                              userDetails.getUsername());
         // modificamos lo que es la respuesta para adjuntar el token a la respuesta HTTP del cliente
                             //Name         //Value
         response.addHeader("Authorization","Bearer " + token);

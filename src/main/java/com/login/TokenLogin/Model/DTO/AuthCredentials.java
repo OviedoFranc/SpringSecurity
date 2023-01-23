@@ -1,4 +1,4 @@
-package com.login.TokenLogin.Security;
+package com.login.TokenLogin.Model.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

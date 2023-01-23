@@ -24,8 +24,16 @@ public class UserController {
         public List<User> user(){
            return userRepository.findAll();
         }
+         @GetMapping("/userWithToken")
+         public List<User> userWithToken(){
+            return userRepository.findAll();
+         }
+        @GetMapping("/adminPanel")
+        public String adminPanel(){
+            return "Panel de admin abierto";
+        }
 
-        @PostMapping("/register")
+        @PostMapping("/user/register")
         public ResponseEntity registrarUsuario(@RequestBody DTOUserReg usuario){
             UserDetailsService.registerUser(usuario);
             return  ResponseEntity.ok(HttpStatus.OK);
