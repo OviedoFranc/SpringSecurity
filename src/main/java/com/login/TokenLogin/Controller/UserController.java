@@ -2,10 +2,8 @@ package com.login.TokenLogin.Controller;
 
 import com.login.TokenLogin.Model.User;
 import com.login.TokenLogin.Repository.UserRepository;
-import com.login.TokenLogin.Security.UserDetailsServiceImpl;
-import org.apache.coyote.Response;
+import com.login.TokenLogin.Security.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.login.TokenLogin.Model.DTO.DTOUserReg;
@@ -18,7 +16,7 @@ public class UserController {
         @Autowired
         UserRepository userRepository;
         @Autowired
-        UserDetailsServiceImpl UserDetailsService;
+        UserService UserDetailsService;
 
         @GetMapping("/user")
         public List<User> user(){
@@ -36,7 +34,11 @@ public class UserController {
         @PostMapping("/user/register")
         public ResponseEntity registrarUsuario(@RequestBody DTOUserReg usuario){
             UserDetailsService.registerUser(usuario);
-            return  ResponseEntity.ok(HttpStatus.OK);
+            return  ResponseEntity.ok("User register successfully");
         }
 
+       @GetMapping("/**")
+        public ResponseEntity not_found(){
+        return ResponseEntity.notFound().build();
+    }
 }

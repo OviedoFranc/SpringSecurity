@@ -2,9 +2,8 @@ package com.login.TokenLogin.Security.Filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.login.TokenLogin.Model.User;
-import com.login.TokenLogin.Model.DTO.AuthCredentials;
+import com.login.TokenLogin.Security.Model.AuthCredentials;
 import com.login.TokenLogin.Security.TokenUtils;
-import com.login.TokenLogin.Security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +32,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
              authCredentials = new ObjectMapper().readValue(
                     request.getReader(),
                     AuthCredentials.class);
-        } catch(IOException e) {}
+        } catch(IOException e) {
+            logger.error("Error al convertir las credenciales de autenticación a objeto AuthCredentials", e);
+        }
 
         UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(
                 authCredentials.getEmail(),
@@ -49,8 +50,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
-        String token = TokenUtils.createToken(userDetails.getNombre(),
+        User userDetails = (User) authResult.getPrincipal();
+        String token = TokenUtils.createToken(userDetails.getName(),
                                               userDetails.getUsername());
         // modificamos lo que es la respuesta para adjuntar el token a la respuesta HTTP del cliente
                             //Name         //Value
