@@ -18,16 +18,16 @@ import java.io.IOException;
 import java.util.Collections;
 
 @AllArgsConstructor
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
 
 
-    //IMPLEMENTACION DEL INTENTO DE AUTENTICACION DE ESTE FILTRO
+    //INTENTO DE AUTENTICACION DE SOLICITUD HTTP
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
 												HttpServletResponse response) throws AuthenticationException {
 
         AuthCredentials authCredentials = new AuthCredentials() ;
-        //Cuando nos envian las credenciales en formato Json las convertimos
+        //Cuando nos envian las credenciales en formato Json las convertimos y leemos
         try{
              authCredentials = new ObjectMapper().readValue(
                     request.getReader(),
@@ -43,18 +43,19 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return getAuthenticationManager().authenticate(usernamePAT);
     }
 
-    // EN CASO DE QUE SE COMPLETE COMPLETAMENTE LA AUTENTICACION
+    // EN CASO DE QUE SE COMPLETE COMPLETAMENTE LA AUTENTICACION SE EJECUTA...
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
 											HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
+        //Al hacer una autenticacion exitosa creo un token y lo devuelvo
+
         User userDetails = (User) authResult.getPrincipal();
         String token = TokenUtils.createToken(userDetails.getName(),
                                               userDetails.getUsername());
-        // modificamos lo que es la respuesta para adjuntar el token a la respuesta HTTP del cliente
-                            //Name         //Value
+        // Adjunto a la respuesta HTTP el token
         response.addHeader("Authorization","Bearer " + token);
         response.getWriter().flush(); // confirmamos los cambios
 

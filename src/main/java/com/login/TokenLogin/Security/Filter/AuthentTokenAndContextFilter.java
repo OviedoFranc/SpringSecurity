@@ -15,8 +15,8 @@ import java.io.IOException;
 
 
 @Component
-public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    @Override
+public class AuthentTokenAndContextFilter extends OncePerRequestFilter {
+    @Override   //TODO FALTA MODIFICAR PARA AGREGAR CASOS DONDE EL CONTEXTO POSEA UN TOKEN
     protected void doFilterInternal(HttpServletRequest request,
 									HttpServletResponse response,
                                     FilterChain filterChain)  throws IOException, ServletException {
