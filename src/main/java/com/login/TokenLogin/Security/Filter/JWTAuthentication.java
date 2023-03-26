@@ -3,7 +3,7 @@ package com.login.TokenLogin.Security.Filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.login.TokenLogin.Model.User;
 import com.login.TokenLogin.Security.Model.AuthCredentials;
-import com.login.TokenLogin.Security.TokenUtils;
+import com.login.TokenLogin.Security.Service.JWTTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
 
 @AllArgsConstructor
 public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
@@ -39,11 +40,11 @@ public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
         UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(
                 authCredentials.getEmail(),
                 authCredentials.getPassword(),
-                Collections.emptyList() );       //en este ultimo realmente irian los roles
+                Collections.emptyList() );       //TODO en este ultimo realmente irian los roles
         return getAuthenticationManager().authenticate(usernamePAT);
     }
 
-    // EN CASO DE QUE SE COMPLETE COMPLETAMENTE LA AUTENTICACION SE EJECUTA...
+    // EN CASO DE QUE SE COMPLETE SATISFACTORIAMENTE LA AUTENTICACION SE EJECUTA ESTA RESPUESTA
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
 											HttpServletResponse response,
@@ -51,10 +52,13 @@ public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
 
         //Al hacer una autenticacion exitosa creo un token y lo devuelvo
-
         User userDetails = (User) authResult.getPrincipal();
-        String token = TokenUtils.createToken(userDetails.getName(),
-                                              userDetails.getUsername());
+
+        //Creo un token y le asigno el user, y extraClaims que quiero pasar en el token
+        String token = JWTTokenService.createToken( userDetails,
+                                                Map.of("Name", userDetails.getName(),
+                                                        "Rol", userDetails.getRol()) );
+
         // Adjunto a la respuesta HTTP el token
         response.addHeader("Authorization","Bearer " + token);
         response.getWriter().flush(); // confirmamos los cambios

@@ -18,7 +18,7 @@ public class UserService implements UserDetailsService {
 
 
     public void registerUser(DTOUserReg usuario){
-        User user = new User(usuario.nombre(),
+        User user = new User(usuario.name(),
                              usuario.email(),
                              new BCryptPasswordEncoder().encode(usuario.password()) ,
                              usuario.rol() );

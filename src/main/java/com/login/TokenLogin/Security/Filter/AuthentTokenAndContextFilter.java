@@ -1,6 +1,6 @@
 package com.login.TokenLogin.Security.Filter;
 
-import com.login.TokenLogin.Security.TokenUtils;
+import com.login.TokenLogin.Security.Service.JWTTokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
+//TODO DOCUMENTAR
 @Component
 public class AuthentTokenAndContextFilter extends OncePerRequestFilter {
     @Override   //TODO FALTA MODIFICAR PARA AGREGAR CASOS DONDE EL CONTEXTO POSEA UN TOKEN
@@ -26,7 +26,8 @@ public class AuthentTokenAndContextFilter extends OncePerRequestFilter {
         if (bearerToken != null && bearerToken.startsWith("Bearer") ){
             String token = bearerToken.replace("Bearer ", ""); // extraemos el token con la utilidad creada, nos devuelve algo que SPRING SECURITY ENTIENDE
 
-            UsernamePasswordAuthenticationToken usernamePAT = TokenUtils.getAuthentication(token);
+            UsernamePasswordAuthenticationToken usernamePAT = JWTTokenService.getAuthentication(token);
+            // TODO MANEJO DE ERROR SI LAS CREDENCIALES NO SON AUTENTICAS O VALIDAS
             SecurityContextHolder.getContext().setAuthentication(usernamePAT);
         }
 

@@ -15,7 +15,7 @@ import java.util.Collections;
 public class User implements UserDetails {
     @Id @GeneratedValue( strategy = GenerationType.AUTO)
     private Integer ID;
-    @Column(name = "nombre")
+    @Column(name = "name")
     private String name;
     @Column(name = "email")
     private String email;
@@ -49,6 +49,7 @@ public class User implements UserDetails {
         return this.password;
     }
 
+    //SETEO COMO USERNAME EL MAIL PARA EL LOGEO
     @Override
     public String getUsername() {
         return this.email;

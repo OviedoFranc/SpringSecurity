@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @AllArgsConstructor
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -58,7 +59,7 @@ public class WebSecurityConfig {
     AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class) //
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder()) //usa el password encoder de abajo
+                .passwordEncoder(passwordEncoder())//usa el password encoder de abajo
                 .and()
                 .build();
     }
