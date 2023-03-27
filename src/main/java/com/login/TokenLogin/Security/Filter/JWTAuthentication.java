@@ -34,6 +34,8 @@ public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
                     request.getReader(),
                     AuthCredentials.class);
         } catch(IOException e) {
+
+            logger.error(  request );
             logger.error("Error al convertir las credenciales de autenticación a objeto AuthCredentials", e);
         }
 

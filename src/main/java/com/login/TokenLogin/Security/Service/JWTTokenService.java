@@ -6,12 +6,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+@Service
 public class JWTTokenService {
 
     private final static String ACCESS_TOKEN_SECRET = "2b234d0a3544d5491d856c89f771f717";
